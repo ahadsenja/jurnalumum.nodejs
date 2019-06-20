@@ -9,9 +9,19 @@ const sequelize = new Sequelize('database', 'username', 'password', {
     storage: 'migrations/jurnal.sqlite'
   })
 
-  sequelize.authenticate().then(() => {
-    console.log('Connection has been established successfully.');
+  // Uncomment this ONLY WHEN you want to rebuild your database
+  sequelize.sync({ force: true }).then(function(err) {
+    console.log('The table was successfully created!')
+  }, function(err) {
+    console.log('An error occurred while creating the table:', err)
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+
+module.exports = sequelize
+
+
+const User = require('./models/user') 
+const Jurnal = require('./models/jurnal') 
+const Transaction = require('./models/transaction') 
+
+User.hasMany(Jurnal)
+Jurnal.hasMany(Transaction)
